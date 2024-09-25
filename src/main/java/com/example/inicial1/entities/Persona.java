@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 //Lombok
 @AllArgsConstructor
@@ -19,14 +20,15 @@ import java.io.Serializable;
 @Entity
 @Table(name = "Persona")
 
-public class Persona implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Persona extends Base {
     @Column(name = "Nombre")
     private String nombre;
     @Column(name = "Apellido")
     private String apellido;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "PersonaLibro", joinColumns = @JoinColumn(name = "PersonaID"), inverseJoinColumns = @JoinColumn(name = "LibroID"))
+    private List<Libro> libros = new ArrayList<Libro>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_Domicilio")
